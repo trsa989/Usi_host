@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USI Host PRIME Project Config File
+ * \brief G3 Coordinator App
  *
  * Copyright (c) 2021 Microchip Technology Inc. and its subsidiaries.
  *
@@ -46,23 +46,14 @@ extern "C" {
 
 #define NUM_PORTS                                                       1
 /* #define PORT_0 CONF_PORT(COM_TYPE, 3,230400,0x7FFF, 0x7FFF) */
-#define PORT_0 CONF_PORT(UART_TYPE, 5, 230400, 4096, 4096)
+#define PORT_0 CONF_PORT(UART_TYPE, 0, 230400, 4096, 4096)
+#define NUM_PROTOCOLS                                           1
+//#define USE_MNGP_PRIME_PORT                                     0
+//#define USE_PROTOCOL_SNIF_PRIME_PORT        0
+//#define USE_PROTOCOL_PRIME_API              0
 
-#ifdef PRIME_MANAGER
-#define NUM_PROTOCOLS                       4
-#define USE_MNGP_PRIME_PORT                 0
-#define USE_PROTOCOL_SNIF_PRIME_PORT        0
-#define USE_PROTOCOL_PRIME_API              0
-#define USE_PROTOCOL_PHY_SERIAL_PRIME       0
-#else
-#define NUM_PROTOCOLS                       6
-#define USE_MNGP_PRIME_PORT                 0
-#define USE_PROTOCOL_SNIF_PRIME_PORT        0
-#define USE_PROTOCOL_PRIME_API              0
-#define USE_PROTOCOL_ADP_G3_PORT            0
-#define USE_PROTOCOL_COORD_G3_PORT          0
-#define USE_PROTOCOL_MAC_G3_PORT            0
-#endif
+#define USE_PROTOCOL_ADP_G3_PORT                       1
+//#define USE_PROTOCOL_COORD_G3_PORT                      0
 
 #ifdef __cplusplus
 }

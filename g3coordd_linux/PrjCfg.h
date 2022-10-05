@@ -46,13 +46,13 @@ extern "C" {
 
 #define NUM_PORTS                                                       1
 /* #define PORT_0 CONF_PORT(COM_TYPE, 3,230400,0x7FFF, 0x7FFF) */
-#define PORT_0 CONF_PORT(TTYS_TYPE, 1, 230400, 4096, 4096)
+#define PORT_0 CONF_PORT(UART_TYPE, 0, 230400, 4096, 4096)
 #define NUM_PROTOCOLS                                           1
 //#define USE_MNGP_PRIME_PORT                                     0
 //#define USE_PROTOCOL_SNIF_PRIME_PORT        0
 //#define USE_PROTOCOL_PRIME_API              0
 
-#define USE_PROTOCOL_ADP_G3_PORT                       0 
+#define USE_PROTOCOL_ADP_G3_PORT                       1
 //#define USE_PROTOCOL_COORD_G3_PORT                      0
 
 #ifdef __cplusplus

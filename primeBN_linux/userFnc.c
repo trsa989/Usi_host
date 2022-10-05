@@ -103,14 +103,17 @@ int8_t addUsi_Open(uint8_t port_type, uint8_t port_number, uint32_t bauds)
 	memset(serial_port,'\0',16);
 	if ((g_st_config.sz_tty_name != NULL) && (g_st_config.sz_port_type != TCP_TYPE)){
 		// Serial Port Connection - From Global Config - Ignore PrjCfg.h
+		LOG_USI_ERR("Serial Port Connection - FFrom Global Config - Ignore PrjCfg.h\n\r");
 		fd=_open_tty_serial(g_st_config.sz_tty_name, g_st_config.sz_tty_speed);
 	}else if (g_st_config.sz_port_type == TCP_TYPE){
 		// TCP Port connection - From Global Config
    	fd=_connect_to_server(g_st_config.sz_hostname,g_st_config.sz_tcp_port);
 	}else{
 		/* Port from PrjCfg.h */
+		LOG_USI_ERR("TTYS_TYPE = %d port_type = %d\n\r",TTYS_TYPE ,port_type);
 		if (TTYS_TYPE == port_type){
 			  // Serial Port Connection - From PrjCfg.h
+			LOG_USI_ERR("Serial Port Connection - From PrjCfg.h\n\r");
 			  snprintf(serial_port, 16, "/dev/ttyS%d",port_number);
 				fd=_open_tty_serial(serial_port, bauds);
 		} else if (TTYACM_TYPE == port_type){

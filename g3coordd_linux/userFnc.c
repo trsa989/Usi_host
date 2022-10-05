@@ -49,7 +49,7 @@
 
 #include "globals.h"
 
-//#define CONFIG_GLOBAL_FD_SERIAL_PORT
+#define CONFIG_GLOBAL_FD_SERIAL_PORT
 #ifdef CONFIG_GLOBAL_FD_SERIAL_PORT
 int32_t fd_serial_port = -1;
 #else
@@ -80,13 +80,16 @@ int8_t addUsi_Open(uint8_t port_type, uint8_t port_number, uint32_t bauds)
 {
 	char serial_port[16];
 	int32_t fd;
-
+	LOG_USI_ERR("addUsi_Open");
 	memset(serial_port, '\0', 16);
 	if (g_st_config.sz_port_type != TCP_TYPE) {
 		/* Serial Port Connection - From PrjCfg.h */
 		//snprintf(serial_port, 16, "/dev/ttyS%d", port_number);
 		//fd = _open_tty_serial(serial_port, bauds);
+		LOG_USI_ERR("g_st_config.sz_tty_name = %s sz_tty_speed = %d\n\r",g_st_config.sz_tty_name ,g_st_config.sz_tty_speed);
 		fd=_open_tty_serial(g_st_config.sz_tty_name, g_st_config.sz_tty_speed);
+		LOG_USI_ERR("fd %d \n\r", fd);
+
 	}else if (TCP_TYPE == port_type) {
 		/* TCP Port connection - From Global Config */
 		fd = _connect_to_server(g_st_config.sz_hostname, g_st_config.sz_tcp_port);
@@ -136,7 +139,7 @@ int addUsi_Close(uint8_t port_type, uint8_t port_number)
 		}
 	}
 	if (!fd) {
-		LOG_USI_ERR("Serial port not found!!!");
+		LOG_USI_ERR("Close    Serial port not found!!!");
 		return -1;
 	}
 #endif
@@ -170,7 +173,7 @@ uint16_t addUsi_TxMsg(uint8_t port_type, uint8_t port_number, uint8_t *sz_msg, u
 		}
 	}
 	if (!fd) {
-		LOG_USI_ERR("Serial port not found!!!");
+		LOG_USI_ERR("Tx Serial port not found!!!");
 		ret = -1;
 	}
 #endif
@@ -204,7 +207,7 @@ int8_t addUsi_RxChar(uint8_t port_type, uint8_t port_number, uint8_t *c)
 		}
 	}
 	if (!fd) {
-		LOG_USI_ERR("Serial port not found!!!");
+		LOG_USI_ERR("Rx Serial port not found!!!");
 		ret = -1;
 	}
 #endif
@@ -234,9 +237,8 @@ int _open_tty_serial(char *_sz_port, unsigned int _ui_speed)
 		LOG_USI_ERR("Open_port: Unable to open %s", _sz_port);
 		return -1;
 	}
-
 	/* fcntl(fd, F_SETFL, O_NONBLOCK); */
-	LOG_USI_INFO("TTY port %s is open with speed %u and descriptor %d", _sz_port, _ui_speed, fd);
+	LOG_USI_INFO("TTY port %s is open with speed %d and descriptor %d", _sz_port, _ui_speed, fd);
 
 	/* Check valid baudrates - B256000 is not defined on Linux */
 	if (_ui_speed == 115200) {

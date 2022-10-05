@@ -74,6 +74,7 @@
 #include "app_adp_mng.h"
 #include "Logger.h"
 #include "tun.h"
+#include "debug.h"
 
 const unsigned char band_str[4][12] = {"CENELEC_A", "CENELEC_B", "FCC", "ARIB"};
 
@@ -89,7 +90,7 @@ struct st_configuration g_st_config = {
 	.sz_ipaddress  = "FD00:0:2:781D:1122:3344:5566:0000",
 	.uc_prefix_len = 64,
 	.sz_tun_name   = "g3plc",
-	.sz_tty_name   = "/dev/ttyS1",
+	.sz_tty_name   = "/dev/ttyS0",
 	.sz_tty_speed  = 230400,
 	.sz_hostname   = "127.0.0.1",
 	.sz_tcp_port   = 3000,
@@ -107,7 +108,7 @@ int g_usi_fd = 0;
 
 #define MIKROBUS1 0
 #define MIKROBUS2 1
-#define MIKROBUS1_GPIO_RESET "PB2"  /* Reset for mikroBUS 1 is mapped on PB2  */
+#define MIKROBUS1_GPIO_RESET "gpio17"  /* Reset for mikroBUS 1 is mapped on PB2  */
 #define MIKROBUS2_GPIO_RESET "PA26" /* Reset for mikroBUS 2 is mapped on PA26 */
 
 /*******************************************************/
@@ -167,6 +168,9 @@ void app_g3_coordinator_signals_handler(int signum)
 		LOG_ERR(Log("I die...\r\n"));
 		/* Clean exit should be written */
 		exit(0);
+	#ifdef DEBUG_IN_FILE
+		close_log_file();
+	#endif
 	}
 
 	return;
@@ -416,6 +420,9 @@ int main(int argc, char **argv)
 	static int num_tx = 0;
 	struct pollfd poll_fds[2];
 	int ret;
+	#ifdef DEBUG_IN_FILE
+		open_and_create_log_file();
+	#endif
 
 	SET_RGB_OFF()
 	SET_LED_GREEN_TIMER(500, 500)

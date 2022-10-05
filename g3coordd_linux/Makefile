@@ -64,7 +64,9 @@ OBJ_LIST = $(OBJ_DIR)/main.o \
 		   $(OBJ_DIR)/version_features.o \
 		   $(OBJ_DIR)/aes_wrapper.o \
 			 $(OBJ_DIR)/cipher_wrapper.o \
- 		   $(OBJ_DIR)/eax.o
+ 		   $(OBJ_DIR)/eax.o \
+		   $(OBJ_DIR)/debug.o
+
 
 $(OBJ_DIR)/addUsi.o: ../src/addUsi.c
 	$(CC) $(COPTS_COORD) $(INCLUDE) -o $(OBJ_DIR)/addUsi.o ../src/addUsi.c
@@ -153,6 +155,9 @@ $(OBJ_DIR)/cmac.o: ./mbed-tls/library/cmac.c
 
 $(OBJ_DIR)/debug_tls.o: ./mbed-tls/library/debug_tls.c
 	$(CC) $(COPTS_COORD) $(INCLUDE) ./mbed-tls/library/debug_tls.c  -o $(OBJ_DIR)/debug_tls.o
+
+$(OBJ_DIR)/debug.o: ./debug.c
+	$(CC) $(COPTS_COORD) $(INCLUDE) ./debug.c  -o $(OBJ_DIR)/debug.o
 
 $(OBJ_DIR)/error.o: ./mbed-tls/library/error.c
 	$(CC) $(COPTS_COORD) $(INCLUDE) ./mbed-tls/library/error.c  -o $(OBJ_DIR)/error.o

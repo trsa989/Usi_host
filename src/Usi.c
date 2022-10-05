@@ -43,6 +43,10 @@
 /* Config Include */
 #include "Usi.h"
 #include "UsiCfg.h"
+#include "Logger.h"
+#include "debug.h"
+#undef PRINTF
+#define PRINTF(...) printf(__VA_ARGS__); fflush(stdout)
 
 /* *** Declarations ********************************************************** */
 
@@ -464,6 +468,16 @@ static uint8_t _doEoMsg(uint8_t port)                   /* 3 ms. */
 		return(FALSE);
 	}
 
+	#ifdef DEBUG_IN_FILE
+		{
+			fprintf((FILE *)get_file_debug_ptr(),"[%s] %s", timestamp_log(),"Rx = ");
+			for(uint8_t k = 0; k < count; k++)
+			{
+				 fprintf((FILE *)get_file_debug_ptr(),"%02x", rxBuf[k]);
+			}
+			fprintf((FILE *)get_file_debug_ptr(),"\r\n");
+		}
+	#endif
 	/* Extract length and protocol */
 
 	type = TYPE_PROTOCOL(rxBuf[TYPE_PROTOCOL_OFFSET]);
@@ -618,6 +632,7 @@ void usi_Start(void)
 /* uint8_t usi_SendCmd (uint8_t pType, uint8_t *msg, uint16_tlen) */
 uint8_t usi_SendCmd(CmdParams *msg)
 {
+	//LOG_ERR(Log("usi_SendCmd= "));
 	uint32_t crc;
 	int8_t portIdx;
 	uint8_t *ptr2TxBuf;
@@ -636,6 +651,7 @@ uint8_t usi_SendCmd(CmdParams *msg)
 	if (portIdx == -1) {
 		return(FALSE);
 	}
+	portIdx = 0;
 
 	/* Get available length in buffer */
 	availableLen = usiCfgTxBuf[portIdx].size - usiCfgTxParam[portIdx].count;
@@ -649,6 +665,7 @@ uint8_t usi_SendCmd(CmdParams *msg)
 	ptr2TxBuf = usiCfgTxBuf[portIdx].buf;
 	ptr2AuxTxBuf = usiCfgAuxTxBuf->buf;
 
+	//LOG_ERR(Log("ptr2TxBuf= %x ptr2AuxTxBuf= %x, portIdx = %d",ptr2TxBuf,ptr2AuxTxBuf,portIdx));
 	/* Store index, just in case after checkings we have to restore previous state */
 	prevIdxIn = usiCfgTxParam[portIdx].idxIn;
 
@@ -986,6 +1003,16 @@ void usi_TxProcess(void)
 
 			/* Send chars to device, checking how many have been really processed by device */
 			sentChars = addUsi_TxMsg(usiCfgMapPorts[i].sType, usiCfgMapPorts[i].chn, &usiCfgTxBuf[i].buf[txCfg->idxOut], txLen);
+			#ifdef DEBUG_IN_FILE
+				fprintf((FILE *)get_file_debug_ptr(),"[%s] %s", timestamp_log(),"Tx = ");
+				uint8_t *bufptr = &(usiCfgTxBuf[i].buf[txCfg->idxOut]);
+				for(uint8_t k = 0; k<txLen; k++)
+				{
+					 fprintf((FILE *)get_file_debug_ptr(),"%02x", bufptr[k]);
+				}
+				fprintf((FILE *)get_file_debug_ptr(),"\r\n");
+			
+			#endif
 
 			/* Adjust buffer values depending on sent chars */
 			txCfg->count -= sentChars;
