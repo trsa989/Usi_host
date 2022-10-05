@@ -1,0 +1,16 @@
+USI-HOST Release 2.3.0
+=======================
+
+Changes:
+
+*) Added support to G3 Hybrid Profile on all interfaces (Coordinator, ADP and MAC)
+*) Updated G3 Coordinator and Base Node Linux examples
+
+
+COMPATIBILITY:
+==============
+
+ *) PRIME_1_4 Base/Service Node release 1.4.3.2
+ *) G3 release 2.0.0
+
+ 
